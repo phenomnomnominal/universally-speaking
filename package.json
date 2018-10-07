@@ -7,7 +7,11 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "serve:ssr": "node dist/server",
+    "build:ssr": "npm run build:client-and-server-bundles && npm run compile:server",
+    "build:client-and-server-bundles": "ng build --prod && ng run universally-speaking:server:production",
+    "compile:server": "tsc -p server.tsconfig.json"
   },
   "private": true,
   "dependencies": {
@@ -19,6 +23,7 @@
     "@angular/http": "^6.1.0",
     "@angular/platform-browser": "^6.1.0",
     "@angular/platform-browser-dynamic": "^6.1.0",
+    "@angular/platform-server": "^6.1.0",
     "@angular/router": "^6.1.0",
     "@ngrx/effects": "^6.1.0",
     "@ngrx/entity": "^6.1.0",
