@@ -1,0 +1,71 @@
+@import '~@trademe/tangram/tools/env';
+
+:host {
+  display: block;
+  position: absolute;
+  max-height: 100vh;
+  overflow: scroll;
+}
+
+h1, form, tg-reveal, select[tgSelect] {
+  background: rgba(20, 20, 20, 0.7);
+}
+
+h1 {
+  color: $tg-hokey-pokey-10;
+}
+
+select[tgSelect]:focus {
+  box-shadow: 0 0 0 2px $tg-hokey-pokey-100;
+}
+
+tg-select-container ::ng-deep {
+  color: $tg-hokey-pokey-100;
+  
+  tg-pointer {
+    color: $tg-hokey-pokey-100;
+  }
+
+  label {
+    color: $tg-silver-fern-30;
+  }
+}
+
+tg-reveal ::ng-deep button.o-reveal__trigger {
+  color: $tg-hokey-pokey-500;
+
+  &:active {
+    color: $tg-hokey-pokey-600;
+  }
+
+  &:focus::after {
+    border-color: $tg-hokey-pokey-50 !important;
+    border-radius: 3px;
+  }
+}
+
+tg-pagination ::ng-deep {
+  color: $tg-silver-fern-30;
+}
+
+a.asteroid-data__pagination-link {
+  color: $tg-hokey-pokey-500 !important;
+
+  &:active {
+    color: $tg-hokey-pokey-600;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 2px $tg-hokey-pokey-50 !important;
+    border-radius: 3px;
+  }
+}
+
+[tgTable] ::ng-deep th {
+  background: $tg-black;
+  color: $tg-hokey-pokey-100;
+}
+
+[tgTable] ::ng-deep td {
+  color: $tg-silver-fern-30;
+}

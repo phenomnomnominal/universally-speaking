@@ -1,0 +1,7 @@
+{
+    "/api": {
+        "target": "http://www.asterank.com",
+        "secure": false,
+        "changeOrigin": true
+    }
+}

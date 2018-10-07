@@ -1,0 +1,13 @@
+:host {
+  display: block;
+  position: absolute;
+  height: 100vh;
+}
+
+.asteroid-visualisation__container {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  cursor: move;
+}
