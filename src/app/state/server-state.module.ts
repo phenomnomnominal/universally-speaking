@@ -6,9 +6,7 @@ import { take } from 'rxjs/operators';
 import { STATE_KEY, State } from './state';
 
 @NgModule({
-    imports: [
-        BrowserTransferStateModule
-    ]
+    imports: [BrowserTransferStateModule]
 })
 export class ServerStateModule {
     constructor (

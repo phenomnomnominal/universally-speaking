@@ -6,9 +6,7 @@ import { STATE_KEY, State } from './state';
 import { TransferStateAction } from './state-transfer.actions';
 
 @NgModule({
-    imports: [
-        BrowserTransferStateModule
-    ]
+    imports: [BrowserTransferStateModule]
 })
 export class ClientStateModule {
     constructor (

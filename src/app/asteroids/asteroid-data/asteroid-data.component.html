@@ -6,9 +6,9 @@
 <form
   tgPaddingX
   tgPaddingXSize="base">
-    <tg-row>
-      <tg-col
-        sm="6">
+  <tg-row>
+    <tg-col
+      sm="6">
       <tg-select-container
         label="Sort">
         <select
@@ -25,19 +25,19 @@
     </tg-col>
     <tg-col
       sm="6">
-        <tg-select-container
-          label="Show">
-          <select
-            tgSelect
-            name="show"
-            required
-            [formControl]="show">
-            <option
-              *ngFor="let showOption of showOptions"
-              [value]="showOption">{{ showOption }}
-            </option>
-          </select>
-        </tg-select-container>
+      <tg-select-container
+        label="Show">
+        <select
+          tgSelect
+          name="show"
+          required
+          [formControl]="show">
+          <option
+            *ngFor="let showOption of showOptions"
+            [value]="showOption">{{ showOption }}
+          </option>
+        </select>
+      </tg-select-container>
     </tg-col>
   </tg-row>
 </form>

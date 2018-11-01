@@ -1,22 +1,25 @@
 import 'zone.js/dist/zone-node';
 import 'reflect-metadata';
-import {enableProdMode} from '@angular/core';
+
+import { enableProdMode } from '@angular/core';
 // Express Engine
-import {ngExpressEngine} from '@nguniversal/express-engine';
+import { ngExpressEngine } from '@nguniversal/express-engine';
 // Import module map for lazy loading
-import {provideModuleMap} from '@nguniversal/module-map-ngfactory-loader';
+import { provideModuleMap } from '@nguniversal/module-map-ngfactory-loader';
 
 import * as express from 'express';
 import * as proxy from 'express-http-proxy';
 
-import {join} from 'path';
+import { join } from 'path';
 
 const API_BASE_URL = 'http://www.asterank.com';
 
 import { XMLHttpRequest } from 'xhr2';
 XMLHttpRequest.nodejsSet({
-    baseUrl: API_BASE_URL
+  baseUrl: API_BASE_URL
 });
+
+import { INITIAL_MEDIA_SIZE_MAP } from '@trademe/tangram';
 
 // Faster server renders w/ Prod mode (dev mode never needed)
 enableProdMode();
@@ -34,7 +37,8 @@ const {AppServerModuleNgFactory, LAZY_MODULE_MAP} = require('../universally-spea
 app.engine('html', ngExpressEngine({
   bootstrap: AppServerModuleNgFactory,
   providers: [
-    provideModuleMap(LAZY_MODULE_MAP)
+    provideModuleMap(LAZY_MODULE_MAP),
+    { provide: INITIAL_MEDIA_SIZE_MAP, useValue: { isSm: true, isSd: false, isMd: false, isMg: false, isLg: false, isLl: false, isXl: false } }
   ]
 }));
 
