@@ -25,9 +25,7 @@ import { reducers, metaReducers, ClientStateModule } from './state';
     }, {
       path: 'asteroids',
       loadChildren: './asteroids/asteroids.module#AsteroidsModule'
-    }], {
-      initialNavigation: 'enabled'
-    }),
+    }]),
 
     EffectsModule.forRoot([]),
     StoreModule.forRoot(reducers, { metaReducers }), StoreDevtoolsModule.instrument(),
