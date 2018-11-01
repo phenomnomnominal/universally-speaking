@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, ViewChild, ElementRef, Renderer2, Optional } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { filter } from 'rxjs/operators';
 
 import { AsteroidDataFacade } from '../asteroid-data/asteroid-data.facade';
@@ -16,19 +16,17 @@ export class AsteroidVisualisationComponent implements OnInit {
   constructor (
     private _asteroidDataFacade: AsteroidDataFacade,
     private _renderer: Renderer2,
-    @Optional() private _visualisationService: VisualisationService
+    private _visualisationService: VisualisationService
   ) { }
 
   public ngOnInit (): void {
-    if (this._visualisationService) {
-      const canvas = this._visualisationService.init(this.container);
+    const canvas = this._visualisationService.init(this.container);
 
-      this._asteroidDataFacade.getAsteroidData().pipe(
-        filter(asteroids => !asteroids.isLoading && !!asteroids.item),
-      )
-      .subscribe(asteroids => this._visualisationService.addData(asteroids.item));
+    this._asteroidDataFacade.getAsteroidData().pipe(
+      filter(asteroids => !asteroids.isLoading && !!asteroids.item),
+    )
+    .subscribe(asteroids => this._visualisationService.addData(asteroids.item));
 
-      this._renderer.appendChild(this.container.nativeElement, canvas);
-    }
+    this._renderer.appendChild(this.container.nativeElement, canvas);
   }
 }

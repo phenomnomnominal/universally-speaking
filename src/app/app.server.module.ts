@@ -4,7 +4,6 @@ import { ModuleMapLoaderModule } from '@nguniversal/module-map-ngfactory-loader'
 
 import { AppModule } from './app.module';
 import { AppComponent } from './app.component';
-import { VisualisationService } from './asteroids/asteroid-visualisation/visualisation/visualisation.service';
 
 @NgModule({
   imports: [
@@ -12,9 +11,6 @@ import { VisualisationService } from './asteroids/asteroid-visualisation/visuali
     ModuleMapLoaderModule,
     ServerModule,
   ],
-  bootstrap: [AppComponent],
-  providers: [
-    { provide: VisualisationService, useValue: null }
-  ]
+  bootstrap: [AppComponent]
 })
 export class AppServerModule {}
