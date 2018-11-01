@@ -58,20 +58,14 @@
           scope="col">Name
         </th>
         <th
-          usBreakpoint
-          [sm]="true"
-          [md]="false"
-          [xl]="true"
+          *ngIf="(mediaSize$ | async)?.isSm || (mediaSize$ | async)?.isXl"
           scope="col">Type
         </th>
         <th
           scope="col">a (AU)
         </th>
         <th
-          usBreakpoint
-          [sm]="true"
-          [md]="false"
-          [xl]="true"
+          *ngIf="(mediaSize$ | async)?.isSm || (mediaSize$ | async)?.isXl"
           scope="col">e (Eccentricity)
         </th>
         <th
@@ -92,10 +86,7 @@
           Diameter (km)
         </th>
         <th
-          usBreakpoint
-          [sm]="true"
-          [md]="false"
-          [xl]="true"
+          *ngIf="(mediaSize$ | async)?.isSm || (mediaSize$ | async)?.isXl"
           scope="col">Group
         </th>
       </tr>
@@ -104,32 +95,23 @@
       <tr
         *ngFor="let asteroid of (asteroidData$ | async)?.item | slice : ((asteroidPage$ | async) - 1) * 10 : (asteroidPage$ | async) * 10">
         <th
-          usBreakpoint
-          [sm]="true"
-          [md]="false"
+          *ngIf="(mediaSize$ | async)?.isSm"
           scope="row">
             {{ asteroid.name || asteroid.prov_des }}
         </th>
         <td
-          usBreakpoint
-          [md]="true"
+          *ngIf="(mediaSize$ | async)?.isMd || (mediaSize$ | async)?.isLg || (mediaSize$ | async)?.isXl"
           data-th="Name">{{ asteroid.name || asteroid.prov_des }}
         </td>
         <td
-          usBreakpoint
-          [sm]="true"
-          [md]="false"
-          [xl]="true"
+          *ngIf="(mediaSize$ | async)?.isSm || (mediaSize$ | async)?.isXl"
           data-th="Type">{{ asteroid.spec }}
         </td>
         <td          
           data-th="a (AU)">{{ asteroid.a | number }}
         </td>
         <td
-          usBreakpoint
-          [sm]="true"
-          [md]="false"
-          [xl]="true"
+          *ngIf="(mediaSize$ | async)?.isSm || (mediaSize$ | async)?.isXl"
           data-th="e (Eccentricity)">{{ asteroid.e | number }}
         </td>
         <td
@@ -148,10 +130,7 @@
           [hidden]="sort.value !== 'smallest'"
           data-th="Diameter (km)">{{ asteroid.diameter }}</td>
         <td
-          usBreakpoint
-          [sm]="true"
-          [md]="false"
-          [xl]="true"
+          *ngIf="(mediaSize$ | async)?.isSm || (mediaSize$ | async)?.isXl"
           data-th="Group">
           <span>{{ asteroid.class }}</span><span [hidden]="asteroid.pha !== 'Y'"> (PHA)</span>
         </td>

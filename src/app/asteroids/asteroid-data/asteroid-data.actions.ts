@@ -3,19 +3,9 @@ import { Action } from '@ngrx/store';
 import { IAsteroidDataOptions, IAsteroidDataResponse } from './asteroid-data.reducer';
 
 export enum AsteroidDataActionTypes {
-  GET = '[AsteroidData] Get',
   GET_FROM_API = '[AsteroidData] Get from API',
   GET_FROM_API_SUCCESS = '[AsteroidData] Get from API success',
   GET_FROM_API_FAIL = '[AsteroidData] Get from API fail'
-}
-
-export class GetAsteroidDataAction implements Action {
-  public static TYPE = AsteroidDataActionTypes.GET;
-  public readonly type = AsteroidDataActionTypes.GET;
-
-  constructor (
-    public options: IAsteroidDataOptions = {}
-  ) { }
 }
 
 export class GetAsteroidDataFromApiAction implements Action {
@@ -33,8 +23,7 @@ export class GetAsteroidDataFromApiSuccessAction implements Action {
 
   constructor (
     public options: IAsteroidDataOptions,
-    public response: IAsteroidDataResponse,
-    public cachedAt: string
+    public response: IAsteroidDataResponse
   ) { }
 }
 
@@ -48,4 +37,4 @@ export class GetAsteroidDataFromApiFailAction implements Action {
   ) { }
 }
 
-export type AsteroidDataActions = GetAsteroidDataAction | GetAsteroidDataFromApiAction | GetAsteroidDataFromApiSuccessAction | GetAsteroidDataFromApiFailAction;
+export type AsteroidDataActions = GetAsteroidDataFromApiAction | GetAsteroidDataFromApiSuccessAction | GetAsteroidDataFromApiFailAction;

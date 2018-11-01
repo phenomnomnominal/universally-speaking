@@ -62,7 +62,6 @@ function getAsteroidDataFromApiSuccessHandler (state: IAsteroidDataState, action
     id,
     changes: {
       isLoading: false,
-      cachedAt: action.cachedAt,
       item: action.response
     }
   }, state.asteroidDataEntities);

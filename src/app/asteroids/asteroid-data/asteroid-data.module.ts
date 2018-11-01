@@ -7,7 +7,6 @@ import { StoreModule } from '@ngrx/store';
 
 import { TgSelectModule, TgGridModule, TgTableModule, TgPaginationModule, TgRevealModule, TgSpacingModule } from '@trademe/tangram';
 
-import { BreakpointModule } from '../../_shared/breakpoint/breakpoint.module';
 import { FuzzyModule } from '../../_shared/fuzzy/fuzzy.module';
 import { AsteroidDataComponent } from './asteroid-data.component';
 import { AsteroidDataEffects } from './asteroid-data.effects';
@@ -29,7 +28,6 @@ import { ASTEROID_DATA_FEATURE, asteroidDataReducer } from './asteroid-data.redu
     TgSpacingModule,
     TgTableModule,
 
-    BreakpointModule,
     FuzzyModule
   ],
   declarations: [
