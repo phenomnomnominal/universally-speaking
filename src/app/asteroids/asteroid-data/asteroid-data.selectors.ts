@@ -1,16 +1,31 @@
-import { State } from '../../reducers';
-import { SortParam, ShowParam } from './options';
+import { Params } from '@angular/router';
+import { createFeatureSelector } from '@ngrx/store';
+import { createSelector } from 'reselect';
 
-export const ASTEROID_DATA = 'ASTEROID_DATA';
+import { AsyncItem, createCacheKey, RouterSelectors } from '../../state';
+import { ASTEROID_DATA_FEATURE, asteroidDataAdapter, IAsteroidDataOptions, IAsteroidDataResponse, IAsteroidDataState } from './asteroid-data.reducer';
 
-export class AsteroidDataSelectors {
-  static asteroidData = (state: State) => state[ASTEROID_DATA];
-  static asteroidSearchParams = (state: State): [SortParam, ShowParam] => {
-    const { queryParams } = state.router.state.root;
-    return [queryParams.sort, queryParams.show];
-  }
-  static asteroidResultsPage = (state: State): number => {
-    const { queryParams } = state.router.state.root;
-    return queryParams.page;
-  }
+export namespace AsteroidDataSelectors {
+    const asteroidDataState = createFeatureSelector<IAsteroidDataState>(ASTEROID_DATA_FEATURE);
+
+    export const currentOptions = createSelector(
+        RouterSelectors.currentParams,
+        RouterSelectors.currentQueryParams,
+        (params: Params, queryParams: Params): IAsteroidDataOptions => ({ ...params, ...queryParams } as IAsteroidDataOptions)
+    );
+
+    const cachedAsteroidDataEntity = createSelector(
+        asteroidDataState,
+        (state: IAsteroidDataState) => state.asteroidDataEntities
+    );
+
+    export const { selectEntities: cachedAsteroidDataEntities } = asteroidDataAdapter.getSelectors(cachedAsteroidDataEntity);
+
+    export const currentAsteroidData = createSelector(
+        cachedAsteroidDataEntities,
+        currentOptions,
+        (asteroidDataCache, options): AsyncItem<IAsteroidDataResponse> => {
+            return <AsyncItem<IAsteroidDataResponse>>(asteroidDataCache[createCacheKey(options)] || { isLoading: false });
+        }
+    );
 }

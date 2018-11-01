@@ -1,11 +1,12 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MediaSizeService, MediaSizeMap } from '@trademe/tangram';
-import { Observable, combineLatest } from 'rxjs';
-import { switchMap, startWith, take, tap, debounceTime, map } from 'rxjs/operators';
+import { combineLatest, Observable } from 'rxjs';
+import { map, startWith, switchMap, take, tap } from 'rxjs/operators';
 
+import { AsyncItem } from '../../state';
 import { AsteroidDataFacade } from './asteroid-data.facade';
-import { AsteroidDataState } from './asteroid-data.reducers';
+import { AsteroidData } from './asteroid';
 import { INITIAL_SORT, INITIAL_SHOW, SORT_OPTIONS, SHOW_OPTIONS } from './options';
 
 @Component({
@@ -14,12 +15,12 @@ import { INITIAL_SORT, INITIAL_SHOW, SORT_OPTIONS, SHOW_OPTIONS } from './option
   styleUrls: ['./asteroid-data.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AsteroidDataComponent implements OnInit {
-  public expanded = false;
+export class AsteroidDataComponent {
+  public expanded = true;
   public sortOptions = SORT_OPTIONS;
   public showOptions = SHOW_OPTIONS;
 
-  public asteroidData$: Observable<AsteroidDataState>;
+  public asteroidData$: Observable<AsyncItem<AsteroidData>>;
   public asteroidPage$: Observable<number>;
   public mediaSize$: Observable<MediaSizeMap>;
 
@@ -29,21 +30,18 @@ export class AsteroidDataComponent implements OnInit {
   constructor (
     private _asteroidDataFacade: AsteroidDataFacade,
     private _mediaSize: MediaSizeService
-  ) { }
-
-  public ngOnInit (): void {
+  ) {
     this.asteroidData$ = this._asteroidDataFacade.getAsteroidSearchParams().pipe(
       take(1),
-      tap(([sort, show]) => {
-        this.sort.setValue(sort);
-        this.show.setValue(show);
+      tap(params => {
+        this.sort.setValue(params.sort || INITIAL_SORT.param);
+        this.show.setValue(params.show || INITIAL_SHOW);
       }),
-      switchMap(([sort, show]) => combineLatest(
-        this.sort.valueChanges.pipe(startWith(sort || INITIAL_SORT.param)),
-        this.show.valueChanges.pipe(startWith(show || INITIAL_SHOW))
+      switchMap(params => combineLatest(
+        this.sort.valueChanges.pipe(startWith(this.sort.value)),
+        this.show.valueChanges.pipe(startWith(this.show.value))
       )),
-      debounceTime(200),
-      switchMap(([sort, show]) => this._asteroidDataFacade.dispatchAndSelectAsteroidData(sort, show))
+      switchMap(([sort, show]) => this._asteroidDataFacade.dispatchAndSelectAsteroidData({ sort, show }))
     );
 
     this.asteroidPage$ = this._asteroidDataFacade.getAsteroidResultPage().pipe(

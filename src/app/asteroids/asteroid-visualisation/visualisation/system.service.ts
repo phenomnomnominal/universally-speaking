@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 
-import { THREE } from './three';
+import { AdditiveBlending, BackSide, BufferAttribute, BufferGeometry, Color, Float32BufferAttribute, Line, LineBasicMaterial, LineSegments, Mesh, ShaderMaterial, SphereGeometry, Sprite, SpriteMaterial } from 'three';
 
-import { AsteroidData, Asteroid } from '../../asteroid-data/asteroid-data.service';
+import { AsteroidData, Asteroid } from '../../asteroid-data/asteroid';
 import { Orbit } from './orbit';
 import { MERCURY, VENUS, EARTH, MARS, JUPITER } from './planet';
 import { TextureService } from './texture.service';
@@ -11,8 +11,8 @@ import { TextureService } from './texture.service';
   providedIn: 'root'
 })
 export class SystemService {
-  private _attributes: Record<any, { type: 'f' | 'c', value: Array<number>, needsUpdate?: boolean }>;
-  private _geometry: typeof THREE.Geometry;
+  private _attributes: Record<string, BufferAttribute>;
+  private _geometry: BufferGeometry;
 
   private _planets: Array<Orbit>;
 
@@ -20,43 +20,42 @@ export class SystemService {
     private _textureService: TextureService
   ) { }
 
-  public initSun (): typeof THREE.Sprite {
-    const sun = new THREE.Sprite(new THREE.SpriteMaterial({
+  public initSun (): Sprite {
+    const sun = new Sprite(new SpriteMaterial({
       map: this._textureService.loadTexture('/assets/textures/sun.jpg'),
-      blending: THREE.AdditiveBlending,
-      useScreenCoordinates: false,
+      blending: AdditiveBlending,
       color: 0xffffff
     }));
-    sun.scale.x = 10;
-    sun.scale.y = 10;
+    sun.scale.x = 25;
+    sun.scale.y = 25;
     sun.scale.z = 1;
     return sun;
   }
 
-  public initSkyBox (): typeof THREE.Mesh {
-    const geometry = new THREE.SphereGeometry(3000, 60, 40);
+  public initSkyBox (): Mesh {
+    const geometry = new SphereGeometry(3000, 60, 40);
     const uniforms = {
       texture: { type: 't', value: this._textureService.loadTexture('/assets/textures/skybox.jpg') }
     };
-    const material = new THREE.ShaderMaterial({
+    const material = new ShaderMaterial({
       uniforms,
       vertexShader: document.getElementById('sky-vertex').textContent,
       fragmentShader: document.getElementById('sky-density').textContent
     });
-    const skyBox = new THREE.Mesh(geometry, material);
+    const skyBox = new Mesh(geometry, material);
+    (skyBox.material as ShaderMaterial).side = BackSide;
 
     skyBox.scale.set(-1, 1, 1);
     skyBox.rotation.order = 'XZY';
     skyBox.rotation.z = Math.PI / 2;
     skyBox.rotation.x = Math.PI;
-    skyBox.renderDepth = 1000.0;
 
     return skyBox;
   }
 
-  public initAsteroids (attributes): typeof THREE.Geometry {
+  public initAsteroids (attributes: Record<string, BufferAttribute>): BufferGeometry {
     this._attributes = attributes;
-    this._geometry = new THREE.Geometry();
+    this._geometry = new BufferGeometry();
     return this._geometry;
   }
 
@@ -66,7 +65,7 @@ export class SystemService {
     this._initBodies(this._planets.concat(orbits));
   }
 
-  public initPlanets (): Array<Orbit> {
+  public initPlanets (): Array<Line> {
     const mercury = new Orbit(MERCURY, {
       color: 0X1B8840,
       name: 'Mercury'
@@ -96,31 +95,33 @@ export class SystemService {
     });
   }
 
-  private _initOrbit (orbit: Orbit): typeof THREE.Line {
+  private _initOrbit (orbit: Orbit): Line {
     this._initPlanet();
 
-    const points = new THREE.Geometry();
     const parts = 200;
+    const position = [];
+    orbit.getSmoothOrbit(parts).forEach(([x, y, z]) => position.push(x, y, z));
 
-    points.vertices = orbit.getSmoothOrbit(parts).map(([x, y, z]) => new THREE.Vector3(x, y, z));
-    // Required for dotted lines.
-    points.computeLineDistances();
+    const geometry = new BufferGeometry();
+    geometry.addAttribute('position', new Float32BufferAttribute(position, 3));
 
-    const material = new THREE.LineDashedMaterial({
-      color: 0x888888,
-      linewidth: orbit.width,
-      dashSize: 1,
-      gapSize: 1
+    const material = new LineBasicMaterial({
+      color: 0x888888
     });
-    return new THREE.Line(points, material, THREE.LineStrip);
+
+    const lineSegments = new LineSegments(geometry, material);
+    lineSegments.computeLineDistances();
+    return lineSegments;
   }
 
   private _initPlanet (): void {
-    this._geometry.vertices.push(new THREE.Vector3(0, 0, 0));
+    const position = this._geometry.getAttribute('position');
+    position.setXYZ(position.count, 0, 0, 0);
   }
 
   private _initAsteroid (asteroid: Asteroid): Orbit {
-    this._geometry.vertices.push(new THREE.Vector3(0, 0, 0));
+    const position = this._geometry.getAttribute('position');
+    position.setXYZ(position.count, 0, 0, 0);
     return new Orbit(asteroid, {
       color: 0xDDDDDD,
       size: 15,
@@ -133,25 +134,22 @@ export class SystemService {
     const { size, is_planet, a, e, i, o, ma, n, w, P, epoch, value_color } = this._attributes;
     bodies.forEach((body, index) => {
       const { eph, isPlanet } = body;
-      size.value[index] = isPlanet ? 250 : this._lerp(body.size * 10, 0, index / bodies.length);
-      is_planet.value[index] = isPlanet ? 1.0 : 0.0;
-      a.value[index] = eph.a;
-      e.value[index] = eph.e;
-      i.value[index] = eph.i;
-      o.value[index] = eph.om;
-      ma.value[index] = eph.ma;
-      n.value[index] = eph.n || -1.0;
-      w.value[index] = eph.w_bar || (eph.w + eph.om);
-      P.value[index] = eph.P || -1.0;
-      epoch.value[index] = eph.epoch;
-      value_color.value[index] = new THREE.Color(body.color);
+      const color = new Color(body.color);
+      (size.array as Array<number>)[index] = isPlanet ? 250 : 25;
+      (is_planet.array as Array<number>)[index] = isPlanet ? 1.0 : 0.0;
+      (a.array as Array<number>)[index] = eph.a;
+      (e.array as Array<number>)[index] = eph.e;
+      (i.array as Array<number>)[index] = eph.i;
+      (o.array as Array<number>)[index] = eph.om;
+      (ma.array as Array<number>)[index] = eph.ma;
+      (n.array as Array<number>)[index] = eph.n || -1.0;
+      (w.array as Array<number>)[index] = eph.w_bar || (eph.w + eph.om);
+      (P.array as Array<number>)[index] = eph.P || -1.0;
+      (epoch.array as Array<number>)[index] = eph.epoch;
+      value_color.setXYZ(index, color.r, color.g, color.b);
     });
 
     value_color.needsUpdate = true;
     size.needsUpdate = true;
-  }
-
-  private _lerp (v0: number, v1: number, t: number): number {
-    return v0 * (1 - t) + v1 * t;
   }
 }

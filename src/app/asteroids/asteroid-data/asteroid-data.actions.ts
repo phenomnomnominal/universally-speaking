@@ -1,7 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { AsteroidData } from './asteroid-data.service';
-import { SortParam, ShowParam } from './options';
+import { IAsteroidDataOptions, IAsteroidDataResponse } from './asteroid-data.reducer';
 
 export enum AsteroidDataActionTypes {
   GET = '[AsteroidData] Get',
@@ -10,37 +9,43 @@ export enum AsteroidDataActionTypes {
   GET_FROM_API_FAIL = '[AsteroidData] Get from API fail'
 }
 
-export class GetAsteroidData implements Action {
+export class GetAsteroidDataAction implements Action {
   public static TYPE = AsteroidDataActionTypes.GET;
   public readonly type = AsteroidDataActionTypes.GET;
 
   constructor (
-    public sort: SortParam,
-    public show: ShowParam
+    public options: IAsteroidDataOptions = {}
   ) { }
 }
 
-export class GetAsteroidDataFromAPI implements Action {
+export class GetAsteroidDataFromApiAction implements Action {
   public static TYPE = AsteroidDataActionTypes.GET_FROM_API;
   public readonly type = AsteroidDataActionTypes.GET_FROM_API;
+
+  constructor (
+    public options: IAsteroidDataOptions
+  ) { }
 }
 
-export class GetAsteroidDataFromApiSuccess implements Action {
+export class GetAsteroidDataFromApiSuccessAction implements Action {
   public static TYPE = AsteroidDataActionTypes.GET_FROM_API_SUCCESS;
   public readonly type = AsteroidDataActionTypes.GET_FROM_API_SUCCESS;
 
   constructor (
-    public response: AsteroidData
+    public options: IAsteroidDataOptions,
+    public response: IAsteroidDataResponse,
+    public cachedAt: string
   ) { }
 }
 
-export class GetAsteroidDataFromApiFail implements Action {
+export class GetAsteroidDataFromApiFailAction implements Action {
   public static TYPE = AsteroidDataActionTypes.GET_FROM_API_FAIL;
   public readonly type = AsteroidDataActionTypes.GET_FROM_API_FAIL;
 
   constructor (
+    public options: IAsteroidDataOptions,
     public error: Error
   ) { }
 }
 
-export type AsteroidDataActions = GetAsteroidData | GetAsteroidDataFromAPI | GetAsteroidDataFromApiSuccess | GetAsteroidDataFromApiFail;
+export type AsteroidDataActions = GetAsteroidDataAction | GetAsteroidDataFromApiAction | GetAsteroidDataFromApiSuccessAction | GetAsteroidDataFromApiFailAction;

@@ -1,163 +1,175 @@
-<ng-container
-  *ngIf="(asteroidData$ | async) as asteroids">
-  <ng-container
-    *ngIf="(asteroidPage$ | async) as asteroidPage">
-    <h1
-      tgPadding
-      tgPaddingSize="base"
-      tgMargin
-      tgMarginSize="none">Universally Speaking</h1>
-    <form
-      tgPaddingX
-      tgPaddingXSize="base">
-        <tg-row>
-          <tg-col
-          md="6">
-          <tg-select-container
-            label="Sort">
-            <select
-              tgSelect
-              name="sort"
-              required
-              [formControl]="sort">
-              <option
-                *ngFor="let sortOption of sortOptions"
-                [ngValue]="sortOption.param">{{ sortOption.name }}
-              </option>
-            </select>
-          </tg-select-container>
-        </tg-col>
-        <tg-col
-          md="6">
-            <tg-select-container
-              label="Show">
-              <select
-                tgSelect
-                name="show"
-                required
-                [formControl]="show">
-                <option
-                  *ngFor="let showOption of showOptions"
-                  [value]="showOption">{{ showOption }}
-                </option>
-              </select>
-            </tg-select-container>
-        </tg-col>
-      </tg-row>
-    </form>
-  
-    <ng-container
-      *ngIf="mediaSize$ | async as mediaSize">
+<h1
+  tgPadding
+  tgPaddingSize="base"
+  tgMargin
+  tgMarginSize="none">Universally Speaking</h1>
+<form
+  tgPaddingX
+  tgPaddingXSize="base">
+    <tg-row>
+      <tg-col
+        sm="6">
+      <tg-select-container
+        label="Sort">
+        <select
+          tgSelect
+          name="sort"
+          required
+          [formControl]="sort">
+          <option
+            *ngFor="let sortOption of sortOptions"
+            [ngValue]="sortOption.param">{{ sortOption.name }}
+          </option>
+        </select>
+      </tg-select-container>
+    </tg-col>
+    <tg-col
+      sm="6">
+        <tg-select-container
+          label="Show">
+          <select
+            tgSelect
+            name="show"
+            required
+            [formControl]="show">
+            <option
+              *ngFor="let showOption of showOptions"
+              [value]="showOption">{{ showOption }}
+            </option>
+          </select>
+        </tg-select-container>
+    </tg-col>
+  </tg-row>
+</form>
 
-      <tg-reveal
-        tgPaddingX
-        tgPaddingXSize="base"
-        closeable
-        [title]="expanded ? 'Hide table' : 'Show table'"
-        (change)="expanded = !expanded">
-          <table
-            tgTable
-            compact>
-            <thead>
-              <tr>
-                <th
-                  scope="col">Name
-                </th>
-                <th
-                  *ngIf="!mediaSize.isSm"
-                  scope="col">Type
-                </th>
-                <th
-                  scope="col">a (AU)
-                </th>
-                <th
-                  *ngIf="mediaSize.isSm || mediaSize.isXl"
-                  scope="col">e (Eccentricity)
-                </th>
-                <th
-                  scope="col">Value ($)
-                </th>
-                <th
-                  scope="col">Est. Profit ($)
-                </th>
-                <th
-                  scope="col">&Delta; v (km/s)
-                </th>
-                <th
-                  scope="col">MOID (AU)
-                </th>
-                <th
-                  [hidden]="sort.value !== 'smallest'"
-                  scope="col">
-                  Diameter (km)
-                </th>
-                <th
-                  *ngIf="mediaSize.isSm || mediaSize.isXl"
-                  scope="col">Group
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                *ngFor="let asteroid of asteroids?.item | slice : (asteroidPage - 1) * 10 : asteroidPage * 10">
-                <th
-                  *ngIf="mediaSize.isSm"
-                  scope="row">
-                    {{ asteroid.name || asteroid.prov_des }}
-                </th>
-                <td
-                  *ngIf="!mediaSize.isSm"
-                  data-th="Name">{{ asteroid.name || asteroid.prov_des }}
-                </td>
-                <td
-                  *ngIf="!mediaSize.isSm"
-                  data-th="Type">{{ asteroid.spec }}
-                </td>
-                <td          
-                  data-th="a (AU)">{{ asteroid.a | number }}
-                </td>
-                <td
-                  *ngIf="mediaSize.isSm || mediaSize.isXl"
-                  data-th="e (Eccentricity)">{{ asteroid.e | number }}
-                </td>
-                <td
-                  data-th="Value ($)">{{ asteroid.price | fuzzy }}
-                </td>
-                <td
-                  data-th="Est. Profit ($)">{{ asteroid.profit | fuzzy }}
-                </td>
-                <td
-                  data-th="&Delta; v (km/s)">{{ asteroid.dv | number }}
-                </td>
-                <td
-                  data-th="MOID (AU)">{{ asteroid.moid | number:'1.0-6' }}
-                </td>
-                <td
-                  [hidden]="sort.value !== 'smallest'"
-                  data-th="Diameter (km)">{{ asteroid.diameter }}</td>
-                <td
-                  *ngIf="mediaSize.isSm || mediaSize.isXl"
-                  data-th="Group">
-                  <span>{{ asteroid.class }}</span><span [hidden]="asteroid.pha !== 'Y'"> (PHA)</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-  
-        <tg-pagination
-          [currentPage]="asteroidPage"
-          [totalPages]="asteroids?.item?.length / 10 | number:'1.0-0'"
-          [itemsToShow]="mediaSize.isSm ? 3 : mediaSize.isMd ? 5 : 7">
-          <a
-            class="asteroid-data__pagination-link"
-            *tgPaginationItem="let page = page; let label = label; let kind = kind;"
-            routerLink="."
-            queryParamsHandling="merge"
-            [queryParams]="{ page: page }">
-            {{ label }}
-          </a>
-        </tg-pagination>
-      </tg-reveal>
-    </ng-container>
-  </ng-container>
-</ng-container>
+<tg-reveal
+  tgPaddingX
+  tgPaddingXSize="base"
+  closeable
+  [expanded]="expanded"
+  [title]="expanded ? 'Hide table' : 'Show table'"
+  (change)="expanded = !expanded">
+  <table
+    tgTable
+    compact>
+    <thead>
+      <tr>
+        <th
+          scope="col">Name
+        </th>
+        <th
+          usBreakpoint
+          [sm]="true"
+          [md]="false"
+          [xl]="true"
+          scope="col">Type
+        </th>
+        <th
+          scope="col">a (AU)
+        </th>
+        <th
+          usBreakpoint
+          [sm]="true"
+          [md]="false"
+          [xl]="true"
+          scope="col">e (Eccentricity)
+        </th>
+        <th
+          scope="col">Value ($)
+        </th>
+        <th
+          scope="col">Est. Profit ($)
+        </th>
+        <th
+          scope="col">&Delta; v (km/s)
+        </th>
+        <th
+          scope="col">MOID (AU)
+        </th>
+        <th
+          [hidden]="sort.value !== 'smallest'"
+          scope="col">
+          Diameter (km)
+        </th>
+        <th
+          usBreakpoint
+          [sm]="true"
+          [md]="false"
+          [xl]="true"
+          scope="col">Group
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let asteroid of (asteroidData$ | async)?.item | slice : ((asteroidPage$ | async) - 1) * 10 : (asteroidPage$ | async) * 10">
+        <th
+          usBreakpoint
+          [sm]="true"
+          [md]="false"
+          scope="row">
+            {{ asteroid.name || asteroid.prov_des }}
+        </th>
+        <td
+          usBreakpoint
+          [md]="true"
+          data-th="Name">{{ asteroid.name || asteroid.prov_des }}
+        </td>
+        <td
+          usBreakpoint
+          [sm]="true"
+          [md]="false"
+          [xl]="true"
+          data-th="Type">{{ asteroid.spec }}
+        </td>
+        <td          
+          data-th="a (AU)">{{ asteroid.a | number }}
+        </td>
+        <td
+          usBreakpoint
+          [sm]="true"
+          [md]="false"
+          [xl]="true"
+          data-th="e (Eccentricity)">{{ asteroid.e | number }}
+        </td>
+        <td
+          data-th="Value ($)">{{ asteroid.price | fuzzy }}
+        </td>
+        <td
+          data-th="Est. Profit ($)">{{ asteroid.profit | fuzzy }}
+        </td>
+        <td
+          data-th="&Delta; v (km/s)">{{ asteroid.dv | number }}
+        </td>
+        <td
+          data-th="MOID (AU)">{{ asteroid.moid | number:'1.0-6' }}
+        </td>
+        <td
+          [hidden]="sort.value !== 'smallest'"
+          data-th="Diameter (km)">{{ asteroid.diameter }}</td>
+        <td
+          usBreakpoint
+          [sm]="true"
+          [md]="false"
+          [xl]="true"
+          data-th="Group">
+          <span>{{ asteroid.class }}</span><span [hidden]="asteroid.pha !== 'Y'"> (PHA)</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <tg-pagination
+    [currentPage]="(asteroidPage$ | async)"
+    [totalPages]="(asteroidData$ | async)?.item?.length / 10 | number:'1.0-0'"
+    [itemsToShow]="(mediaSize$ | async).isSm ? 3 : (mediaSize$ | async).isMd ? 5 : 7">
+    <a
+      class="asteroid-data__pagination-link"
+      *tgPaginationItem="let page = page; let label = label; let kind = kind;"
+      routerLink="."
+      queryParamsHandling="merge"
+      [queryParams]="{ page: page }">
+      {{ label }}
+    </a>
+  </tg-pagination>
+</tg-reveal>

@@ -7,11 +7,11 @@ import { StoreModule } from '@ngrx/store';
 
 import { TgSelectModule, TgGridModule, TgTableModule, TgPaginationModule, TgRevealModule, TgSpacingModule } from '@trademe/tangram';
 
+import { BreakpointModule } from '../../_shared/breakpoint/breakpoint.module';
 import { FuzzyModule } from '../../_shared/fuzzy/fuzzy.module';
 import { AsteroidDataComponent } from './asteroid-data.component';
-import { AsteroidDataFacade } from './asteroid-data.facade';
-import { asteroidDataReducer, asteroidDataInitialState } from './asteroid-data.reducers';
-import { ASTEROID_DATA } from './asteroid-data.selectors';
+import { AsteroidDataEffects } from './asteroid-data.effects';
+import { ASTEROID_DATA_FEATURE, asteroidDataReducer } from './asteroid-data.reducer';
 
 @NgModule({
   imports: [
@@ -19,8 +19,8 @@ import { ASTEROID_DATA } from './asteroid-data.selectors';
     ReactiveFormsModule,
     RouterModule,
 
-    EffectsModule.forFeature([AsteroidDataFacade]),
-    StoreModule.forFeature(ASTEROID_DATA, asteroidDataReducer, { initialState: asteroidDataInitialState }),
+    EffectsModule.forFeature([AsteroidDataEffects]),
+    StoreModule.forFeature(ASTEROID_DATA_FEATURE, asteroidDataReducer),
 
     TgGridModule,
     TgPaginationModule,
@@ -29,6 +29,7 @@ import { ASTEROID_DATA } from './asteroid-data.selectors';
     TgSpacingModule,
     TgTableModule,
 
+    BreakpointModule,
     FuzzyModule
   ],
   declarations: [

@@ -4,6 +4,7 @@
   display: block;
   position: absolute;
   max-height: 100vh;
+  max-width: 100vw;
   overflow: scroll;
 }
 
@@ -31,7 +32,12 @@ tg-select-container ::ng-deep {
   }
 }
 
+tg-reveal ::ng-deep .o-reveal__body {
+  transition: none
+}
+
 tg-reveal ::ng-deep button.o-reveal__trigger {
+  background: inherit;
   color: $tg-hokey-pokey-500;
 
   &:active {

@@ -1,6 +1,6 @@
-import { Injectable, ElementRef, NgZone } from '@angular/core';
+import { Injectable, ElementRef, NgZone} from '@angular/core';
 
-import { AsteroidData } from '../../asteroid-data/asteroid-data.service';
+import { IAsteroidDataResponse } from '../../asteroid-data/asteroid-data.reducer';
 import { SceneService } from './scene.service';
 
 @Injectable({
@@ -20,7 +20,7 @@ export class VisualisationService {
     return canvas;
   }
 
-  public addData (asteroids: AsteroidData): void {
+  public addData (asteroids: IAsteroidDataResponse): void {
     this._sceneService.addData(asteroids);
   }
 }

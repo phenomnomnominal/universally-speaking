@@ -8,9 +8,8 @@ import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { TangramModule } from '@trademe/tangram';
 
-import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
-import { reducers, metaReducers } from './reducers';
+import { reducers, metaReducers, ClientStateModule } from './state';
 
 @NgModule({
   declarations: [
@@ -19,16 +18,19 @@ import { reducers, metaReducers } from './reducers';
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     HttpClientModule,
+    ClientStateModule,
     RouterModule.forRoot([{
       path: '**',
       redirectTo: 'asteroids'
     }, {
       path: 'asteroids',
       loadChildren: './asteroids/asteroids.module#AsteroidsModule'
-    }]),
+    }], {
+      initialNavigation: 'enabled'
+    }),
 
-    StoreModule.forRoot(reducers, { metaReducers }), !environment.production ? StoreDevtoolsModule.instrument() : [],
     EffectsModule.forRoot([]),
+    StoreModule.forRoot(reducers, { metaReducers }), StoreDevtoolsModule.instrument(),
     StoreRouterConnectingModule.forRoot({ stateKey: 'router' }),
 
     TangramModule.forRoot()

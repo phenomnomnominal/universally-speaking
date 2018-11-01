@@ -1,16 +1,18 @@
 import { Injectable } from '@angular/core';
 
-import { THREE } from './three';
+import { Texture, TextureLoader } from 'three';
 
 @Injectable({
     providedIn: 'root'
 })
 export class TextureService {
+    private _loader = new TextureLoader();
+
     private _promises: Array<Promise<any>> = [];
-    public loadTexture (path): void {
+    public loadTexture (path): Texture {
         let resolve;
         this._promises.push(new Promise((res) => resolve = res));
-        return THREE.ImageUtils.loadTexture(path, null, () => resolve());
+        return this._loader.load(path, () => resolve());
     }
 
     public wait (): Promise<any> {
