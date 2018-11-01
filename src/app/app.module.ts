@@ -9,7 +9,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { TangramModule } from '@trademe/tangram';
 
 import { AppComponent } from './app.component';
-import { reducers, metaReducers, ClientStateModule } from './state';
+import { reducers, metaReducers } from './state';
 
 @NgModule({
   declarations: [
@@ -18,7 +18,6 @@ import { reducers, metaReducers, ClientStateModule } from './state';
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     HttpClientModule,
-    ClientStateModule,
     RouterModule.forRoot([{
       path: '**',
       redirectTo: 'asteroids'
