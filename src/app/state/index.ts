@@ -1,5 +1,5 @@
+import { Params } from '@angular/router';
 import { ActionReducerMap, MetaReducer } from '@ngrx/store';
-
 import { routerReducer } from '@ngrx/router-store';
 
 import { State } from './state';
@@ -13,3 +13,7 @@ export const reducers: ActionReducerMap<State> = {
 };
 
 export const metaReducers: Array<MetaReducer<State>> = [];
+
+export function createCacheKey (params: Params): string {
+  return JSON.stringify(params, Object.keys(params).sort());
+}

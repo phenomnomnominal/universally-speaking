@@ -1,8 +1,7 @@
-import { Params } from '@angular/router';
 import { Action } from '@ngrx/store';
 import { EntityState, createEntityAdapter } from '@ngrx/entity';
 
-import { EntityAsyncItem } from '../../state';
+import { EntityAsyncItem, createCacheKey} from '../../state';
 import { AsteroidData } from './asteroid';
 import { SortParam, ShowParam } from './options';
 
@@ -88,8 +87,4 @@ function getAsteroidDataFromApiFailHandler (state: IAsteroidDataState, action: G
     ...state,
     asteroidDataEntities: cachedItems
   };
-}
-
-function createCacheKey (params: Params): string {
-  return JSON.stringify(params, Object.keys(params).sort());
 }
