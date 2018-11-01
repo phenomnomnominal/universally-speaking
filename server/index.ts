@@ -19,6 +19,12 @@ XMLHttpRequest.nodejsSet({
   baseUrl: API_BASE_URL
 });
 
+if (typeof window === 'undefined') {
+  (global as any).window = {};
+  require('three-trackballcontrols');
+  delete (global as any).window;
+}
+
 import { INITIAL_MEDIA_SIZE_MAP } from '@trademe/tangram';
 
 // Faster server renders w/ Prod mode (dev mode never needed)
